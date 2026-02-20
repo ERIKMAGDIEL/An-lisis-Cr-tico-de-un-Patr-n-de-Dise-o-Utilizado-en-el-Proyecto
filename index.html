@@ -3,23 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
-  <div class="wrap">
-  <div class="card">
-
-    <!-- PORTADA -->
-    <section class="title-page">
-      <div class="title-content">
-        <h2 class="app-title">P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</h2>
-        <p class="authors"><strong>Erik Magdiel Pérez García, Duilio Emiliano Ortega</strong></p>
-        <p class="date">1.2</p>
-      </div>
-    </section>
-
-    <header>
-       ...
-    </header>
-
+  <title>P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</title>
 
   <style>
     :root{
@@ -63,6 +47,42 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+    }
+
+    /* PORTADA */
+    .title-page{
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 80px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(900px 260px at 30% 0%, rgba(122,162,247,.14), transparent 60%),
+        radial-gradient(900px 260px at 80% 0%, rgba(166,227,161,.10), transparent 60%);
+    }
+
+    .title-content{
+      text-align: right;
+    }
+
+    .app-title{
+      font-size: 1.45rem;
+      margin: 0 0 10px 0;
+      line-height: 1.25;
+      letter-spacing: .2px;
+    }
+
+    .authors{
+      margin: 6px 0;
+      font-size: 1.05rem;
+      color: rgba(234,240,246,.92);
+    }
+
+    .date{
+      margin-top: 6px;
+      font-size: 1rem;
+      color: var(--muted);
     }
 
     /* Encabezado */
@@ -214,6 +234,15 @@
 <body>
   <div class="wrap">
     <div class="card">
+
+      <!-- PORTADA -->
+      <section class="title-page">
+        <div class="title-content">
+          <h2 class="app-title">P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</h2>
+          <p class="authors"><strong>Erik Magdiel Pérez García, Duilio Emiliano Ortega</strong></p>
+          <p class="date">1.2</p>
+        </div>
+      </section>
 
       <header>
         <h1>P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</h1>
