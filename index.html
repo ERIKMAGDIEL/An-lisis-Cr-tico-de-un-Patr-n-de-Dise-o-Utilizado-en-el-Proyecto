@@ -4,117 +4,316 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</title>
+
   <style>
+    :root{
+      --bg: #0b0f14;
+      --panel: #101823;
+      --panel-2: #0f1722;
+      --text: #eaf0f6;
+      --muted: #b7c3cf;
+      --line: rgba(255,255,255,.10);
+      --accent: #7aa2f7;
+      --accent-2: #a6e3a1;
+      --code-bg: #0b1220;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+      --max: 980px;
+    }
+
+    *{ box-sizing: border-box; }
+
     body{
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
-      margin: 24px;
-      color: #111;
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(122,162,247,.18), transparent 60%),
+                  radial-gradient(1000px 600px at 90% 0%, rgba(166,227,161,.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.7;
     }
+
+    /* Layout centrado */
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    /* Tarjeta principal */
+    .card{
+      background: linear-gradient(180deg, rgba(16,24,35,.92), rgba(15,23,34,.92));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* Encabezado */
     header{
-      margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #ccc;
+      padding: 26px 26px 18px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(800px 220px at 30% 0%, rgba(122,162,247,.18), transparent 60%),
+        radial-gradient(800px 220px at 80% 0%, rgba(166,227,161,.10), transparent 60%);
     }
-    h1{ font-size: 1.6rem; margin: 0 0 8px 0; }
-    .meta{ margin: 0; }
-    h2{ margin-top: 22px; font-size: 1.25rem; }
-    h3{ margin-top: 16px; font-size: 1.1rem; }
-    ul{ margin-top: 6px; }
+
+    h1{
+      margin: 0 0 10px 0;
+      font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+      line-height: 1.25;
+      letter-spacing: .2px;
+    }
+
+    .meta{
+      margin: 0;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .meta strong{
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    /* Contenido */
+    main{
+      padding: 22px 26px 26px;
+    }
+
+    h2{
+      margin: 26px 0 10px;
+      font-size: 1.25rem;
+      letter-spacing: .2px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    h3{
+      margin: 18px 0 8px;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    p{
+      margin: 10px 0;
+      color: rgba(234,240,246,.92);
+    }
+
+    /* Índice profesional */
+    .toc{
+      margin: 18px 0 10px;
+      padding: 16px 16px 14px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .toc-title{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 10px;
+      font-weight: 750;
+      letter-spacing: .2px;
+    }
+
+    .toc-badge{
+      font-size: .78rem;
+      color: rgba(234,240,246,.9);
+      background: rgba(122,162,247,.15);
+      border: 1px solid rgba(122,162,247,.35);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .toc ol{
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .toc li{
+      margin: 6px 0;
+      color: var(--muted);
+    }
+
+    .toc a{
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(234,240,246,.35);
+    }
+
+    .toc a:hover{
+      color: var(--accent);
+      border-bottom-color: rgba(122,162,247,.7);
+    }
+
+    /* Listas */
+    ul{
+      margin: 8px 0 12px;
+      padding-left: 18px;
+    }
+    li{
+      margin: 6px 0;
+      color: rgba(234,240,246,.9);
+    }
+
+    /* Bloques “títulos en negrita” */
+    .boldline{
+      font-weight: 800;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: rgba(234,240,246,.95);
+    }
+
+    /* Código */
     pre{
-      background: #f6f6f6;
-      border: 1px solid #ccc;
-      padding: 12px;
+      margin: 12px 0 14px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.78));
+      border: 1px solid rgba(122,162,247,.25);
+      border-radius: 12px;
       overflow-x: auto;
-      white-space: pre;
-      border-radius: 6px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
     }
     code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.95em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: .95rem;
+      color: #e7efff;
+      white-space: pre;
     }
-    .boldline{
-      font-weight: 700;
-      margin-top: 12px;
-      margin-bottom: 6px;
+
+    /* Separador suave */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+      margin: 20px 0;
     }
+
+    /* Anclas no queden pegadas arriba al hacer scroll */
+    section{ scroll-margin-top: 18px; }
   </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <div class="card">
 
-  <header>
-    <h1>P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</h1>
-    <p class="meta"><strong>Magdiel Garcia</strong></p>
-    <p class="meta">Universidad Linda Vista</p>
-  </header>
+      <header>
+        <h1>P01 – T03: Análisis Crítico de un Patrón de Diseño Utilizado en el Proyecto</h1>
+        <p class="meta"><strong>Magdiel Garcia</strong></p>
+        <p class="meta">Universidad Linda Vista</p>
+      </header>
 
-  <h2>Introducción</h2>
-  <p>
-    El proyecto desarrollado consiste en una API para la gestión del Hogar de Varones Universitarios (HVU),
-    cuyo propósito es administrar usuarios, asistencia, reportes y sanciones. El sistema fue implementado
-    utilizando Node.js con Express como framework principal.
-  </p>
-  <p>
-    Debido a que el proyecto maneja múltiples módulos, reglas de negocio y posibles ampliaciones futuras,
-    se decidió implementar el patrón Clean Architecture. Este patrón fue seleccionado porque permite separar
-    claramente la lógica del negocio de la infraestructura (base de datos, framework, rutas HTTP), favoreciendo
-    la mantenibilidad y escalabilidad del sistema.
-  </p>
-  <p>
-    El objetivo de este análisis es evaluar críticamente la efectividad de Clean Architecture dentro del
-    contexto real del proyecto HVU.
-  </p>
+      <main>
+        <!-- Índice (profesional) -->
+        <nav class="toc" aria-label="Índice del documento">
+          <div class="toc-title">
+            Índice <span class="toc-badge">TABLE OF CONTENTS</span>
+          </div>
+          <ol>
+            <li><a href="#introduccion">Introducción</a></li>
+            <li>
+              <a href="#descripcion-del-patron-y-su-implementacion">Descripción del Patrón y su Implementación</a>
+              <ol>
+                <li><a href="#que-es-clean-architecture">¿Qué es Clean Architecture?</a></li>
+                <li><a href="#implementacion-en-el-proyecto">Implementación en el Proyecto</a></li>
+              </ol>
+            </li>
+            <li>
+              <a href="#analisis-critico-del-patron">Análisis Crítico del Patrón</a>
+              <ol>
+                <li><a href="#efectividad">Efectividad</a></li>
+                <li><a href="#mantenibilidad">Mantenibilidad</a></li>
+                <li><a href="#escalabilidad">Escalabilidad</a></li>
+                <li><a href="#complejidad">Complejidad</a></li>
+                <li><a href="#desempeno">Desempeño</a></li>
+              </ol>
+            </li>
+            <li>
+              <a href="#comparacion-con-alternativas">Comparación con Alternativas</a>
+              <ol>
+                <li><a href="#alternativa-1-mvc">Alternativa 1: MVC</a></li>
+                <li><a href="#alternativa-2-arquitectura-monolitica-simple">Alternativa 2: Arquitectura Monolítica Simple</a></li>
+              </ol>
+            </li>
+            <li><a href="#conclusiones-y-recomendaciones">Conclusiones y Recomendaciones</a></li>
+          </ol>
+        </nav>
 
-  <h2>Descripción del Patrón y su Implementación</h2>
+        <section id="introduccion">
+          <h2>Introducción</h2>
+          <p>
+            El proyecto desarrollado consiste en una API para la gestión del Hogar de Varones Universitarios (HVU),
+            cuyo propósito es administrar usuarios, asistencia, reportes y sanciones. El sistema fue implementado
+            utilizando Node.js con Express como framework principal.
+          </p>
+          <p>
+            Debido a que el proyecto maneja múltiples módulos, reglas de negocio y posibles ampliaciones futuras,
+            se decidió implementar el patrón Clean Architecture. Este patrón fue seleccionado porque permite separar
+            claramente la lógica del negocio de la infraestructura (base de datos, framework, rutas HTTP), favoreciendo
+            la mantenibilidad y escalabilidad del sistema.
+          </p>
+          <p>
+            El objetivo de este análisis es evaluar críticamente la efectividad de Clean Architecture dentro del
+            contexto real del proyecto HVU.
+          </p>
+        </section>
 
-  <h3>¿Qué es Clean Architecture?</h3>
-  <p>Clean Architecture es un patrón arquitectónico que organiza el sistema en capas independientes donde:</p>
-  <ul>
-    <li>El dominio contiene las reglas del negocio.</li>
-    <li>La aplicación orquesta los casos de uso.</li>
-    <li>La infraestructura maneja detalles técnicos.</li>
-    <li>La capa de presentación gestiona la interacción externa (HTTP).</li>
-  </ul>
-  <p>La regla principal es que las dependencias siempre apuntan hacia el núcleo del sistema (el dominio).</p>
+        <section id="descripcion-del-patron-y-su-implementacion">
+          <h2>Descripción del Patrón y su Implementación</h2>
 
-  <h3>Implementación en el Proyecto</h3>
-  <p>El proyecto fue organizado en las siguientes capas:</p>
+          <section id="que-es-clean-architecture">
+            <h3>¿Qué es Clean Architecture?</h3>
+            <p>Clean Architecture es un patrón arquitectónico que organiza el sistema en capas independientes donde:</p>
+            <ul>
+              <li>El dominio contiene las reglas del negocio.</li>
+              <li>La aplicación orquesta los casos de uso.</li>
+              <li>La infraestructura maneja detalles técnicos.</li>
+              <li>La capa de presentación gestiona la interacción externa (HTTP).</li>
+            </ul>
+            <p>La regla principal es que las dependencias siempre apuntan hacia el núcleo del sistema (el dominio).</p>
+          </section>
 
-  <p class="boldline">1. Presentation (Controllers y Routes):</p>
-  <ul>
-    <li>Manejan las peticiones HTTP.</li>
-    <li>No contienen lógica compleja.</li>
-    <li>Ejemplo: user.controller.js</li>
-  </ul>
+          <section id="implementacion-en-el-proyecto">
+            <h3>Implementación en el Proyecto</h3>
+            <p>El proyecto fue organizado en las siguientes capas:</p>
 
-  <p class="boldline">2. Application (Use Cases):</p>
-  <ul>
-    <li>Contienen la lógica del negocio.</li>
-    <li>Ejemplo: CreateUserUseCase, RegisterAttendanceUseCase.</li>
-  </ul>
+            <p class="boldline">1. Presentation (Controllers y Routes):</p>
+            <ul>
+              <li>Manejan las peticiones HTTP.</li>
+              <li>No contienen lógica compleja.</li>
+              <li>Ejemplo: user.controller.js</li>
+            </ul>
 
-  <p class="boldline">3. Domain (Entidades):</p>
-  <ul>
-    <li>Define modelos como User, Attendance, Report.</li>
-    <li>Contiene validaciones esenciales.</li>
-  </ul>
+            <p class="boldline">2. Application (Use Cases):</p>
+            <ul>
+              <li>Contienen la lógica del negocio.</li>
+              <li>Ejemplo: CreateUserUseCase, RegisterAttendanceUseCase.</li>
+            </ul>
 
-  <p class="boldline">4. Infrastructure (Repositorios y Base de Datos):</p>
-  <ul>
-    <li>Implementa acceso a SQL.</li>
-    <li>Contiene clases como SqlUserRepository.</li>
-  </ul>
+            <p class="boldline">3. Domain (Entidades):</p>
+            <ul>
+              <li>Define modelos como User, Attendance, Report.</li>
+              <li>Contiene validaciones esenciales.</li>
+            </ul>
 
-  <p>Ejemplo real de separación:</p>
+            <p class="boldline">4. Infrastructure (Repositorios y Base de Datos):</p>
+            <ul>
+              <li>Implementa acceso a SQL.</li>
+              <li>Contiene clases como SqlUserRepository.</li>
+            </ul>
 
-  <pre><code>// Controlador (solo recibe y responde)
+            <p>Ejemplo real de separación:</p>
+
+            <pre><code>// Controlador (solo recibe y responde)
 export const createUserController = (useCase) =&gt; async (req, res) =&gt; {
   const result = await useCase.execute(req.body);
   res.json(result);
 };
 </code></pre>
 
-  <pre><code>// Caso de uso (logica del negocio)
+            <pre><code>// Caso de uso (logica del negocio)
 async execute(data) {
   if (!data.email) {
     throw new Error("Email obligatorio");
@@ -123,99 +322,126 @@ async execute(data) {
 }
 </code></pre>
 
-  <p>
-    Aquí se observa que el controlador no conoce cómo se guarda el usuario; solo ejecuta el caso de uso.
-  </p>
+            <p>
+              Aquí se observa que el controlador no conoce cómo se guarda el usuario; solo ejecuta el caso de uso.
+            </p>
+          </section>
+        </section>
 
-  <h2>Análisis Crítico del Patrón</h2>
+        <section id="analisis-critico-del-patron">
+          <h2>Análisis Crítico del Patrón</h2>
 
-  <h3>Efectividad</h3>
-  <p>
-    Clean Architecture fue efectiva porque permitió organizar el sistema desde el inicio evitando que la lógica
-    del negocio se mezclara con Express o con la base de datos. Esto redujo errores estructurales y mejoró la
-    claridad del código.
-  </p>
+          <section id="efectividad">
+            <h3>Efectividad</h3>
+            <p>
+              Clean Architecture fue efectiva porque permitió organizar el sistema desde el inicio evitando que la lógica
+              del negocio se mezclara con Express o con la base de datos. Esto redujo errores estructurales y mejoró la
+              claridad del código.
+            </p>
+          </section>
 
-  <h3>Mantenibilidad</h3>
-  <p>
-    La mantenibilidad fue uno de los principales beneficios. Si se requiere modificar la base de datos o cambiar
-    la estructura de persistencia, los cambios se limitan a la capa de infraestructura. La lógica del negocio
-    permanece intacta.
-  </p>
-  <p>
-    Por ejemplo, si en el futuro se cambia de SQL a MongoDB, solo se modifica el repositorio concreto.
-  </p>
+          <section id="mantenibilidad">
+            <h3>Mantenibilidad</h3>
+            <p>
+              La mantenibilidad fue uno de los principales beneficios. Si se requiere modificar la base de datos o cambiar
+              la estructura de persistencia, los cambios se limitan a la capa de infraestructura. La lógica del negocio
+              permanece intacta.
+            </p>
+            <p>
+              Por ejemplo, si en el futuro se cambia de SQL a MongoDB, solo se modifica el repositorio concreto.
+            </p>
+          </section>
 
-  <h3>Escalabilidad</h3>
-  <p>
-    El patrón permitió agregar nuevos módulos (como reportes o sanciones) siguiendo la misma estructura sin
-    afectar módulos existentes. Esto demuestra que el sistema puede crecer de forma ordenada.
-  </p>
+          <section id="escalabilidad">
+            <h3>Escalabilidad</h3>
+            <p>
+              El patrón permitió agregar nuevos módulos (como reportes o sanciones) siguiendo la misma estructura sin
+              afectar módulos existentes. Esto demuestra que el sistema puede crecer de forma ordenada.
+            </p>
+          </section>
 
-  <h3>Complejidad</h3>
-  <p>
-    Una desventaja observada es que aumenta la cantidad de archivos y requiere mayor disciplina. Para
-    desarrolladores sin experiencia, puede resultar complejo comprender todas las capas al inicio.
-  </p>
+          <section id="complejidad">
+            <h3>Complejidad</h3>
+            <p>
+              Una desventaja observada es que aumenta la cantidad de archivos y requiere mayor disciplina. Para
+              desarrolladores sin experiencia, puede resultar complejo comprender todas las capas al inicio.
+            </p>
+          </section>
 
-  <h3>Desempeño</h3>
-  <p>
-    El impacto en el rendimiento fue mínimo. Aunque existen más niveles de abstracción, el tiempo de ejecución
-    no se vio afectado de manera significativa. El beneficio estructural compensa ampliamente este pequeño costo
-    adicional.
-  </p>
+          <section id="desempeno">
+            <h3>Desempeño</h3>
+            <p>
+              El impacto en el rendimiento fue mínimo. Aunque existen más niveles de abstracción, el tiempo de ejecución
+              no se vio afectado de manera significativa. El beneficio estructural compensa ampliamente este pequeño costo
+              adicional.
+            </p>
+          </section>
+        </section>
 
-  <h2>Comparación con Alternativas</h2>
+        <section id="comparacion-con-alternativas">
+          <h2>Comparación con Alternativas</h2>
 
-  <h3>Alternativa 1: MVC</h3>
-  <p>
-    MVC separa Modelo, Vista y Controlador. Es más sencillo de implementar inicialmente, pero en proyectos
-    grandes los controladores tienden a acumular lógica de negocio, lo que dificulta el mantenimiento.
-  </p>
+          <section id="alternativa-1-mvc">
+            <h3>Alternativa 1: MVC</h3>
+            <p>
+              MVC separa Modelo, Vista y Controlador. Es más sencillo de implementar inicialmente, pero en proyectos
+              grandes los controladores tienden a acumular lógica de negocio, lo que dificulta el mantenimiento.
+            </p>
 
-  <p>Comparado con MVC:</p>
-  <ul>
-    <li>Clean Architecture ofrece mejor separación de responsabilidades.</li>
-    <li>MVC es más simple pero menos escalable en proyectos medianos/grandes.</li>
-  </ul>
+            <p>Comparado con MVC:</p>
+            <ul>
+              <li>Clean Architecture ofrece mejor separación de responsabilidades.</li>
+              <li>MVC es más simple pero menos escalable en proyectos medianos/grandes.</li>
+            </ul>
+          </section>
 
-  <h3>Alternativa 2: Arquitectura Monolítica Simple</h3>
-  <p>Otra opción habría sido una estructura básica sin separación estricta por capas.</p>
+          <section id="alternativa-2-arquitectura-monolitica-simple">
+            <h3>Alternativa 2: Arquitectura Monolítica Simple</h3>
+            <p>Otra opción habría sido una estructura básica sin separación estricta por capas.</p>
 
-  <p>Ventajas:</p>
-  <ul>
-    <li>Menor complejidad inicial.</li>
-    <li>Desarrollo más rápido.</li>
-  </ul>
+            <p>Ventajas:</p>
+            <ul>
+              <li>Menor complejidad inicial.</li>
+              <li>Desarrollo más rápido.</li>
+            </ul>
 
-  <p>Desventajas:</p>
-  <ul>
-    <li>Alto acoplamiento.</li>
-    <li>Difícil mantenimiento.</li>
-    <li>Escalabilidad limitada.</li>
-  </ul>
+            <p>Desventajas:</p>
+            <ul>
+              <li>Alto acoplamiento.</li>
+              <li>Difícil mantenimiento.</li>
+              <li>Escalabilidad limitada.</li>
+            </ul>
 
-  <p>
-    En comparación, Clean Architecture ofrece una estructura más robusta y preparada para el crecimiento del
-    sistema HVU.
-  </p>
+            <p>
+              En comparación, Clean Architecture ofrece una estructura más robusta y preparada para el crecimiento del
+              sistema HVU.
+            </p>
+          </section>
+        </section>
 
-  <h2>Conclusiones y Recomendaciones</h2>
-  <p>
-    El análisis demuestra que Clean Architecture fue una decisión adecuada para el proyecto HVU. Permitió
-    mantener una estructura organizada, facilitar el mantenimiento y preparar el sistema para futuras
-    ampliaciones.
-  </p>
-  <p>
-    Aunque introduce mayor complejidad inicial, los beneficios en escalabilidad y claridad estructural superan
-    esta desventaja. Para proyectos académicos pequeños podría parecer excesivo, pero para sistemas reales con
-    múltiples módulos resulta altamente recomendable.
-  </p>
-  <p>
-    Como aprendizaje clave, se concluye que la selección de un patrón debe basarse en la proyección de
-    crecimiento del sistema y no únicamente en la facilidad de implementación inicial. Una arquitectura bien
-    definida desde el principio reduce problemas técnicos a largo plazo y mejora la calidad del software.
-  </p>
+        <div class="divider"></div>
 
+        <section id="conclusiones-y-recomendaciones">
+          <h2>Conclusiones y Recomendaciones</h2>
+          <p>
+            El análisis demuestra que Clean Architecture fue una decisión adecuada para el proyecto HVU. Permitió
+            mantener una estructura organizada, facilitar el mantenimiento y preparar el sistema para futuras
+            ampliaciones.
+          </p>
+          <p>
+            Aunque introduce mayor complejidad inicial, los beneficios en escalabilidad y claridad estructural superan
+            esta desventaja. Para proyectos académicos pequeños podría parecer excesivo, pero para sistemas reales con
+            múltiples módulos resulta altamente recomendable.
+          </p>
+          <p>
+            Como aprendizaje clave, se concluye que la selección de un patrón debe basarse en la proyección de
+            crecimiento del sistema y no únicamente en la facilidad de implementación inicial. Una arquitectura bien
+            definida desde el principio reduce problemas técnicos a largo plazo y mejora la calidad del software.
+          </p>
+        </section>
+
+      </main>
+    </div>
+  </div>
 </body>
 </html>
